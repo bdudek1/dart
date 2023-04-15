@@ -1,29 +1,39 @@
 package com.example.dart.controller;
 
+import com.example.dart.model.Player;
+import com.example.dart.model.dto.PlayerDto;
 import com.example.dart.service.PlayerService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
+
+@Validated
 @RestController
 public class PlayerController {
     @Autowired
     PlayerService playerService;
 
     @GetMapping("/players")
-    public String getPlayers() {
-        return playerService.findAllPlayers().toString();
+    public ResponseEntity<Collection<Player>> getPlayers() {
+        return ResponseEntity.ok(playerService.findAllPlayers());
     }
 
     @GetMapping("/player/{id}")
-    public String getPlayerById(int id) {
-        return playerService.findPlayerById(id).toString();
+    public ResponseEntity<Player> getPlayerById(@PathVariable(name = "id") int id) {
+        return ResponseEntity.ok(playerService.findPlayerById(id));
     }
 
     @PostMapping("/player")
-    public void createPlayer(@RequestParam(name = "name") String name) {
-        playerService.createPlayer(name);
+    public ResponseEntity<Player> createPlayer(@Valid @RequestBody PlayerDto playerDto) {
+        Player player = playerService.createPlayer(playerDto.toPlayer());
+
+        return new ResponseEntity<>(player, HttpStatus.CREATED);
     }
 }
