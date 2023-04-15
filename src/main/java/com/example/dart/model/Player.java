@@ -1,7 +1,9 @@
 package com.example.dart.model;
 
+import com.example.dart.model.dto.PlayerDto;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "players")
@@ -9,13 +11,19 @@ import lombok.Getter;
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
 @DiscriminatorValue(value="guest")
 @Getter
+@ToString
 public class Player {
+    @Column(unique = true, nullable=false)
     private final String name;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     public Player(String name) {
         this.name = name;
     }
+    public Player(PlayerDto playerDto) {
+        this.name = playerDto.getName();
+    }
+    public Player() { this.name = null; }
 }
