@@ -2,16 +2,14 @@ package com.example.dart.model;
 
 import com.example.dart.model.dto.PlayerDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Data;
 
 @Entity
 @Table(name = "players")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING)
 @DiscriminatorValue(value="guest")
-@Getter
-@ToString
+@Data
 public class Player {
     @Column(unique = true, nullable=false)
     private final String name;
