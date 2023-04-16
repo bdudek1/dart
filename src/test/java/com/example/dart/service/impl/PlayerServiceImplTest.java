@@ -1,13 +1,14 @@
-package com.example.dart.service;
+package com.example.dart.service.impl;
 
 import com.example.dart.model.Player;
 import com.example.dart.model.exception.EntityAlreadyExistsException;
 import com.example.dart.model.exception.EntityNotFoundException;
 import com.example.dart.repository.PlayerRepository;
-import com.example.dart.service.impl.PlayerServiceImpl;
+import com.example.dart.service.PlayerService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.mockito.Mock;
 import org.springframework.dao.DataIntegrityViolationException;
 
@@ -63,6 +64,25 @@ public class PlayerServiceImplTest {
         assertThrows(EntityNotFoundException.class, () -> playerService.findPlayerById(1));
 
         verify(playerRepositoryMock, times(1)).findPlayerById(anyInt());
+    }
+
+    @Test
+    public void findPlayerByNameTest() {
+        when(playerRepositoryMock.findPlayerByName(anyString())).thenReturn(Optional.of(TEST_PLAYER));
+
+        Player foundPlayer = playerService.findPlayerByName(TEST_PLAYER.getName());
+
+        verify(playerRepositoryMock, times(1)).findPlayerByName(anyString());
+        assertEquals(TEST_PLAYER, foundPlayer);
+    }
+
+    @Test
+    public void findPlayerByNameShouldThrowEntityNotFoundExceptionTest() {
+        when(playerRepositoryMock.findPlayerByName(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> playerService.findPlayerByName(TEST_PLAYER.getName()));
+
+        verify(playerRepositoryMock, times(1)).findPlayerByName(anyString());
     }
 
     @Test
