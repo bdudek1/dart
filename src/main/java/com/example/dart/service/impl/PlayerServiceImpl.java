@@ -44,4 +44,9 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.findPlayerById(id)
                                .orElseThrow(EntityNotFoundException::new);
     }
+
+    public Player findPlayerByName(String name) {
+        return playerRepository.findPlayerByName(name)
+                .orElseThrow(EntityNotFoundException::new);
+    }
 }

@@ -37,8 +37,21 @@ public class PlayerRepositoryHibernateImpl implements PlayerRepository {
         return Optional.ofNullable(session.get(Player.class, id));
     }
 
+    public Optional<Player> findPlayerByName (String name) {
+        Session session = sessionFactory.getCurrentSession();
+        return Optional.ofNullable(session.createQuery("from Player where name = :name", Player.class)
+                .setParameter("name", name)
+                .uniqueResult());
+    }
+
     public Collection<Player> findAllPlayers() {
         Session session = sessionFactory.getCurrentSession();
         return Collections.unmodifiableCollection(session.createQuery("from Player", Player.class).list());
+    }
+
+    public void deletePlayer (Player player) {
+        Session session = sessionFactory.getCurrentSession();
+        session.remove(player);
+        logger.info("Player {} successfully deleted.", player);
     }
 }
