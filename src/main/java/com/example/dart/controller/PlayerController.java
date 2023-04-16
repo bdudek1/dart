@@ -17,8 +17,13 @@ import java.util.Collection;
 @Validated
 @RestController
 public class PlayerController {
+
+    private PlayerService playerService;
+
     @Autowired
-    PlayerService playerService;
+    public PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
+    }
 
     @GetMapping("/players")
     public ResponseEntity<Collection<Player>> getPlayers() {
@@ -28,6 +33,11 @@ public class PlayerController {
     @GetMapping("/player/{id}")
     public ResponseEntity<Player> getPlayerById(@PathVariable(name = "id") int id) {
         return ResponseEntity.ok(playerService.findPlayerById(id));
+    }
+
+    @GetMapping("/player")
+    public ResponseEntity<Player> getPlayerByName(@RequestParam(name = "name") String name) {
+        return ResponseEntity.ok(playerService.findPlayerByName(name));
     }
 
     @PostMapping("/player")
