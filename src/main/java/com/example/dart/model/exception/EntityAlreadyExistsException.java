@@ -11,5 +11,7 @@ public class EntityAlreadyExistsException extends RuntimeException
         super(message);
     }
 
-    public EntityAlreadyExistsException() { }
+    public EntityAlreadyExistsException() {
+        super();
+    }
 }
