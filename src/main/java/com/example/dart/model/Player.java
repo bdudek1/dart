@@ -1,6 +1,7 @@
 package com.example.dart.model;
 
 import com.example.dart.model.dto.PlayerDto;
+import com.example.dart.model.enums.PlayerType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,16 +13,22 @@ import lombok.Data;
 @Data
 public class Player {
     @Column(unique = true, nullable=false)
-    private final String name;
+    protected final String name;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     public Player(String name) {
         this.name = name;
     }
+
     public Player(PlayerDto playerDto) {
         this.name = playerDto.getName();
     }
+
     public Player() { this.name = null; }
+
+    public PlayerType getPlayerType() {
+        return PlayerType.GUEST;
+    }
 }

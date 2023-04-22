@@ -82,5 +82,4 @@ public class PlayerRepositoryHibernateImplTest {
 
         assertTrue(allPlayersAfterDelete.size() == 0);
     }
-
 }
