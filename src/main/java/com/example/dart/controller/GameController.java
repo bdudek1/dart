@@ -9,6 +9,7 @@ import com.example.dart.service.GameService;
 import com.example.dart.service.PlayerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class GameController {
 
         Game createdGame = gameService.createGame(players);
 
-        return ResponseEntity.ok(new GameDto(createdGame));
+        return new ResponseEntity<>(new GameDto(createdGame), HttpStatus.CREATED);
     }
 
     @GetMapping("/game/{id}")
