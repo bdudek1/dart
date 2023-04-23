@@ -5,8 +5,8 @@ import com.example.dart.model.Player;
 import com.example.dart.model.RegisteredPlayer;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static utils.TestDataHolder.TEST_PLAYERS;
 
 public class PlayerDtoTest {
     private static final String TEST_NAME = "testName";
@@ -32,5 +32,10 @@ public class PlayerDtoTest {
 
         PlayerDto playerDtoFromPlayer = new PlayerDto(player);
         assertFalse(playerDtoFromPlayer.isGuest());
+    }
+
+    @Test
+    public void playerCollectionToPlayerDtoCollectionTest() {
+        assertEquals(TEST_PLAYERS.size(), new PlayerDto().playerCollectionToPlayerDtoCollection(TEST_PLAYERS).size());
     }
 }

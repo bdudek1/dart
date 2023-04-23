@@ -26,24 +26,26 @@ public class PlayerController {
     }
 
     @GetMapping("/players")
-    public ResponseEntity<Collection<Player>> getPlayers() {
-        return ResponseEntity.ok(playerService.findAllPlayers());
+    public ResponseEntity<Collection<PlayerDto>> getPlayers() {
+        Collection<Player> players = playerService.findAllPlayers();
+
+        return ResponseEntity.ok(new PlayerDto().playerCollectionToPlayerDtoCollection(players));
     }
 
     @GetMapping("/player/{id}")
-    public ResponseEntity<Player> getPlayerById(@PathVariable(name = "id") int id) {
-        return ResponseEntity.ok(playerService.findPlayerById(id));
+    public ResponseEntity<PlayerDto> getPlayerById(@PathVariable(name = "id") int id) {
+        return ResponseEntity.ok(new PlayerDto(playerService.findPlayerById(id)));
     }
 
     @GetMapping("/player")
-    public ResponseEntity<Player> getPlayerByName(@RequestParam(name = "name") String name) {
-        return ResponseEntity.ok(playerService.findPlayerByName(name));
+    public ResponseEntity<PlayerDto> getPlayerByName(@RequestParam(name = "name") String name) {
+        return ResponseEntity.ok(new PlayerDto(playerService.findPlayerByName(name)));
     }
 
     @PostMapping("/player")
-    public ResponseEntity<Player> createPlayer(@Valid @RequestBody PlayerDto playerDto) {
+    public ResponseEntity<PlayerDto> createPlayer(@Valid @RequestBody PlayerDto playerDto) {
         Player player = playerService.createPlayer(playerDto.toPlayer());
 
-        return new ResponseEntity<>(player, HttpStatus.CREATED);
+        return new ResponseEntity<>(new PlayerDto(player), HttpStatus.CREATED);
     }
 }
