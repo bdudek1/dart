@@ -13,14 +13,13 @@ import java.util.LinkedHashMap;
 @ToString
 @Getter
 public class GameDto {
-    private final LinkedHashMap<PlayerDto, Integer> playerScoresMap;
+    private LinkedHashMap<PlayerDto, Integer> playerScoresMap;
     private String currentPlayer;
     private Long id;
     private String winner;
     private GameState gameState;
 
     public GameDto(Game game) {
-        this.playerScoresMap = new LinkedHashMap<>();
         setPlayerScoresMap(game);
 
         this.currentPlayer = game.getCurrentPlayer().getName();
@@ -34,25 +33,11 @@ public class GameDto {
         return this.gameState == GameState.FINISHED;
     }
 
-    @JsonIgnore
-    public Collection<PlayerDto> getGuests() {
-        return this.playerScoresMap.keySet()
-                                   .stream()
-                                   .filter(PlayerDto::isGuest)
-                                   .toList();
-    }
-    
-    private Player getPlayerFromGameByName(Game game, String name) {
-        return game.getPlayers()
-                .stream()
-                .filter(player -> player.getName().equals(name))
-                .findFirst()
-                .get();
-    }
-
     private void setPlayerScoresMap(Game game) {
+        this.playerScoresMap = new LinkedHashMap<>();
+
         game.getPlayerScoresMap().forEach((key, value) -> {
-            this.playerScoresMap.put(new PlayerDto(getPlayerFromGameByName(game, key)), value);
+            this.playerScoresMap.put(new PlayerDto(key), value);
         });
     }
 }

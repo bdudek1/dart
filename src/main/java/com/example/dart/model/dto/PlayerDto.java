@@ -6,11 +6,13 @@ import com.example.dart.model.enums.PlayerType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class PlayerDto {
     @NotBlank(message = "Name is mandatory")
     private String name;
@@ -26,6 +28,10 @@ public class PlayerDto {
 
     public PlayerDto(String name) {
         this.name = name;
+    }
+    public PlayerDto(String name, char[] password) {
+        this.name = name;
+        this.password = password;
     }
 
     public Player toPlayer() {

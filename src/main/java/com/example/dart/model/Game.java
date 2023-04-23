@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.util.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import java.util.Map;
 @ToString
 @Getter
 public class Game {
-    private static final int MAX_SCORE = 501;
+    public static final int MAX_SCORE = 501;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,7 +49,7 @@ public class Game {
     public Game() {
         this.gameState = GameState.IN_PROGRESS;
         this.playerScoresMap = new HashMap<>();
-        this.shotsFiredInTurn = Collections.emptyList();
+        this.shotsFiredInTurn = new ArrayList<>();
     }
 
     public Game(Collection<Player> players) {
@@ -90,12 +91,12 @@ public class Game {
         }
     }
 
-    public void nextTurn() {
-        this.shotsFiredInTurn = Collections.emptyList();
+    private void nextTurn() {
+        this.shotsFiredInTurn.clear();
         setCurrentPlayer(getNextPlayer(this.currentPlayer));
     }
 
-    public void finishGame() {
+    private void finishGame() {
         this.gameState = GameState.FINISHED;
         this.winner = this.currentPlayer.getName();
     }
@@ -109,6 +110,7 @@ public class Game {
 
         while (playerIterator.hasNext()) {
             Player nextPlayer = playerIterator.next();
+
             if (nextPlayer.equals(player)) {
                 if (playerIterator.hasNext()) {
                     return playerIterator.next();
