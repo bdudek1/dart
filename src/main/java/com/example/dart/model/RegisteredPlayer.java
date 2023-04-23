@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 @Entity
 @DiscriminatorValue("registered")
 public class RegisteredPlayer extends Player {
-    char[] password;
+    private char[] password;
     public RegisteredPlayer(String name, char[] password) {
         super(name);
         this.password = password;

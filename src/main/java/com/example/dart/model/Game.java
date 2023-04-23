@@ -1,9 +1,14 @@
 package com.example.dart.model;
 
 import com.example.dart.model.enums.GameState;
-import jakarta.persistence.*;
+
 import lombok.Getter;
 import lombok.ToString;
+import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.*;
 import java.util.ArrayList;
@@ -39,10 +44,13 @@ public class Game {
     @Column(name = "score")
     private final Map<String, Integer> playerScoresMap;
 
+    @Cascade(value={CascadeType.ALL})
+    @OnDelete(action= OnDeleteAction.CASCADE)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "game_to_shots_fired_in_turn",
             joinColumns = {@JoinColumn(name = "game_id", referencedColumnName = "id")})
     @Column(name = "shots_fired_in_turn")
+    @JoinColumn
     private Collection<Integer> shotsFiredInTurn;
     private String winner;
 
