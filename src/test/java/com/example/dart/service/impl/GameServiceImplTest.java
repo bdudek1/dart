@@ -10,6 +10,7 @@ import com.example.dart.model.exception.NotEnoughPlayersException;
 import com.example.dart.repository.GameRepository;
 import com.example.dart.service.GameService;
 
+import com.example.dart.service.PlayerStatisticsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -27,9 +28,11 @@ import static utils.TestDataHolder.TEST_PLAYERS;
 import static utils.TestDataHolder.TEST_PLAYER_1;
 
 public class GameServiceImplTest {
-
+    //TODO:: update the tests after implementing PlayerStatisticsService
     @Mock
     private GameRepository gameRepositoryMock;
+    @Mock
+    private PlayerStatisticsService playerStatisticsServiceMock;
     private GameService gameService;
     private static Game TEST_GAME = new Game(TEST_PLAYERS);
 
@@ -79,6 +82,8 @@ public class GameServiceImplTest {
     @Test
     public void testAddShotAndReturnGameDto() {
         doNothing().when(gameRepositoryMock).updateGame(any(Game.class));
+        doNothing().when(playerStatisticsServiceMock).updatePlayerStatistics(any(Game.class), any(Shot.class));
+
         when(gameRepositoryMock.findGameById(anyLong())).thenReturn(Optional.of(TEST_GAME));
         GameDto gameDto = gameService.addShotAndReturnGameDto(1L, new Shot(20, ShotType.DOUBLE));
 
@@ -90,6 +95,7 @@ public class GameServiceImplTest {
 
         verify(gameRepositoryMock, times(1)).findGameById(anyLong());
         verify(gameRepositoryMock, times(1)).updateGame(any(Game.class));
+        verify(playerStatisticsServiceMock, times(1)).updatePlayerStatistics(any(Game.class), any(Shot.class));
     }
 
     @Test
@@ -112,7 +118,8 @@ public class GameServiceImplTest {
     @BeforeEach
     public void prepareTestEnvironment() {
         this.gameRepositoryMock = mock(GameRepository.class);
-        this.gameService = new GameServiceImpl(gameRepositoryMock);
+        this.playerStatisticsServiceMock = mock(PlayerStatisticsService.class);
+        this.gameService = new GameServiceImpl(gameRepositoryMock, playerStatisticsServiceMock);
         TEST_GAME = new Game(TEST_PLAYERS);
     }
 }
