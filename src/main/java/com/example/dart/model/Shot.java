@@ -19,4 +19,8 @@ public class Shot {
             case MISS -> 0;
         };
     }
+
+    public ShotType getShotType() {
+        return shotType;
+    }
 }
