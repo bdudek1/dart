@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,10 +20,26 @@ public class ShotDto {
     private ShotType shotType;
 
     public Shot toShot() {
-        if (score < 0 || score > 20) {
+        if (isShotInvalid()) {
             throw new InvalidShotException();
         }
 
         return new Shot(score, shotType);
+    }
+
+    private boolean isShotInvalid() {
+        if (Objects.isNull(score) || Objects.isNull(shotType)) {
+            return true;
+        }
+
+        if (score >= 0 && score <= 20) {
+            return false;
+        }
+
+        if (score == 25 && shotType != ShotType.TRIPLE) {
+            return false;
+        }
+
+        return true;
     }
 }
