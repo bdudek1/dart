@@ -4,7 +4,6 @@ import com.example.dart.model.Player;
 import com.example.dart.repository.PlayerRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import java.util.Optional;
 @Repository
 @Transactional
 public class PlayerRepositoryHibernateImpl implements PlayerRepository {
-    private static final String DELETE_PLAYER_BY_ID_QUERY = "delete from Player where id = :playerId";
     private static final Logger logger = LoggerFactory.getLogger(PlayerRepositoryHibernateImpl.class);
     private final SessionFactory sessionFactory;
 
@@ -31,6 +29,13 @@ public class PlayerRepositoryHibernateImpl implements PlayerRepository {
         Session session = sessionFactory.getCurrentSession();
         session.persist(player);
         logger.info("Player {} successfully saved.", player);
+    }
+
+    @Override
+    public void updatePlayer(Player player) {
+        Session session = sessionFactory.getCurrentSession();
+        session.merge(player);
+        logger.info("Player {} successfully updated.", player);
     }
 
     public Optional<Player> findPlayerById (int id) {
