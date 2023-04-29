@@ -1,6 +1,8 @@
 package com.example.dart.service.impl;
 
 import com.example.dart.model.Player;
+import com.example.dart.model.PlayerStatistics;
+import com.example.dart.model.RegisteredPlayer;
 import com.example.dart.model.exception.EntityAlreadyExistsException;
 import com.example.dart.model.exception.EntityNotFoundException;
 import com.example.dart.repository.PlayerRepository;
@@ -28,6 +30,11 @@ public class PlayerServiceImpl implements PlayerService {
     public Player createPlayer(Player player) {
         try {
             playerRepository.savePlayer(player);
+
+            if (player instanceof RegisteredPlayer registeredPlayer) {
+                registeredPlayer.setPlayerStatistics(new PlayerStatistics(registeredPlayer));
+                playerRepository.updatePlayer(registeredPlayer);
+            }
         } catch (DataIntegrityViolationException e) {
             logger.warn("Could not save player because player with name {} already exists.", player.getName());
             throw new EntityAlreadyExistsException(e.getMessage());
