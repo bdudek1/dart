@@ -56,4 +56,8 @@ public class PlayerServiceImpl implements PlayerService {
         return playerRepository.findPlayerByName(name)
                 .orElseThrow(EntityNotFoundException::new);
     }
+
+    public void deletePlayer(Player player) {
+        playerRepository.deletePlayer(player);
+    }
 }

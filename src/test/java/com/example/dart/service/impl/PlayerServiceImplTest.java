@@ -98,6 +98,15 @@ public class PlayerServiceImplTest {
         assertEquals(1, foundPlayers.size());
     }
 
+    @Test
+    public void deletePlayerTest() {
+        doNothing().when(playerRepositoryMock).deletePlayer(any(Player.class));
+
+        playerService.deletePlayer(TEST_PLAYER);
+
+        verify(playerRepositoryMock, times(1)).deletePlayer(any(Player.class));
+    }
+
     @BeforeEach
     public void prepareTestEnvironment() {
         this.playerRepositoryMock = mock(PlayerRepository.class);

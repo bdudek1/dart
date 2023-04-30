@@ -9,4 +9,5 @@ public interface PlayerService {
     Collection<Player> findAllPlayers();
     Player findPlayerById(int id);
     Player findPlayerByName(String name);
+    void deletePlayer(Player player);
 }
