@@ -1,6 +1,7 @@
 package com.example.dart.configuration;
 
 import jakarta.persistence.EntityManagerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -18,12 +19,25 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 public class HibernateConfiguration {
+    @Value("${spring.datasource.driverClassName}")
+    private String driverClassName;
+    @Value("${spring.datasource.url}")
+    private String dbUrl;
+    @Value("${spring.datasource.username}")
+    private String dbUsername;
+    @Value("${spring.datasource.password}")
+    private String dbPassword;
+    @Value("${spring.jpa.database-platform}")
+    private String dialect;
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    private String ddlAuto;
+    private static final String PACKAGES_TO_SCAN = "com.example.dart.model";
 
     @Bean
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan("com.example.dart.model");
+        sessionFactory.setPackagesToScan(PACKAGES_TO_SCAN);
         sessionFactory.setHibernateProperties(hibernateProperties());
 
         return sessionFactory;
@@ -32,10 +46,10 @@ public class HibernateConfiguration {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
-        dataSource.setUsername("admin");
-        dataSource.setPassword("admin");
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(dbUrl);
+        dataSource.setUsername(dbUsername);
+        dataSource.setPassword(dbPassword);
 
         return dataSource;
     }
@@ -48,7 +62,7 @@ public class HibernateConfiguration {
 
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
-        factory.setPackagesToScan("com.example.dart.model");
+        factory.setPackagesToScan(PACKAGES_TO_SCAN);
         factory.setDataSource(dataSource());
         factory.afterPropertiesSet();
 
@@ -65,9 +79,9 @@ public class HibernateConfiguration {
     private final Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty(
-                "hibernate.hbm2ddl.auto", "create-drop");
+                "hibernate.hbm2ddl.auto", ddlAuto);
         hibernateProperties.setProperty(
-                "hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+                "hibernate.dialect", dialect);
 
         return hibernateProperties;
     }
