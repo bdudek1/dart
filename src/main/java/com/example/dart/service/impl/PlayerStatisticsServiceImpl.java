@@ -4,7 +4,9 @@ import com.example.dart.model.*;
 import com.example.dart.model.dto.PlayerStatisticsDto;
 import com.example.dart.model.enums.GameState;
 import com.example.dart.model.enums.PlayerStatisticsOrderType;
+import com.example.dart.model.enums.PlayerType;
 import com.example.dart.repository.PlayerStatisticsRepository;
+import com.example.dart.service.PlayerService;
 import com.example.dart.service.PlayerStatisticsService;
 
 import org.slf4j.Logger;
@@ -22,10 +24,12 @@ import java.util.Set;
 public class PlayerStatisticsServiceImpl implements PlayerStatisticsService {
     private static final Logger logger = LoggerFactory.getLogger(PlayerStatisticsServiceImpl.class);
     private final PlayerStatisticsRepository playerStatisticsRepository;
+    private final PlayerService playerService;
 
     @Autowired
-    public PlayerStatisticsServiceImpl(PlayerStatisticsRepository playerStatisticsRepository) {
+    public PlayerStatisticsServiceImpl(PlayerStatisticsRepository playerStatisticsRepository, PlayerService playerService) {
         this.playerStatisticsRepository = playerStatisticsRepository;
+        this.playerService = playerService;
     }
 
     @Override
@@ -41,6 +45,7 @@ public class PlayerStatisticsServiceImpl implements PlayerStatisticsService {
 
         if (game.getGameState() == GameState.FINISHED) {
             addGamesPlayedToPlayerStatistics(game);
+            deleteNonRegisteredUsersFromDb(game);
         }
     }
 
@@ -121,5 +126,13 @@ public class PlayerStatisticsServiceImpl implements PlayerStatisticsService {
                 playerStatisticsRepository.updatePlayerStatistics(playerStatistics);
             }
         });
+    }
+
+    private void deleteNonRegisteredUsersFromDb(Game game) {
+        Set<Player> players = new HashSet<>(game.getPlayers());
+
+        players.stream()
+                .filter(player -> player.getPlayerType() == PlayerType.GUEST)
+                .forEach(playerService::deletePlayer);
     }
 }

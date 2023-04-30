@@ -5,6 +5,7 @@ import com.example.dart.model.Player;
 import com.example.dart.model.Shot;
 import com.example.dart.model.dto.GameDto;
 import com.example.dart.model.enums.GameState;
+import com.example.dart.model.enums.PlayerType;
 import com.example.dart.model.exception.EntityNotFoundException;
 import com.example.dart.model.exception.GameNotInProgressException;
 import com.example.dart.model.exception.NotEnoughPlayersException;
@@ -56,19 +57,30 @@ public class GameServiceImpl implements GameService {
     public GameDto addShotAndReturnGameDto(Long gameId, Shot shot) {
         Game game = findGameById(gameId);
 
-        if(game.getGameState() != GameState.IN_PROGRESS) {
+        if (game.getGameState() != GameState.IN_PROGRESS) {
             logger.warn("Game {} is not in progress. Can't perform a shot.", gameId);
             throw new GameNotInProgressException();
         }
 
         game.performShot(shot);
 
+        Game gameMemo = game.getShallowCopy();
+
+        if (game.getGameState() == GameState.FINISHED) {
+            removeUnregisteredPlayers(game);
+            game.setCurrentPlayer(null);
+        }
+
         gameRepository.updateGame(game);
 
-        playerStatisticsService.updatePlayerStatistics(game, shot);
+        playerStatisticsService.updatePlayerStatistics(gameMemo, shot);
 
-        logger.info("Player {} made a shot {}", game.getCurrentPlayer().getName(), shot);
+        logger.info("Player {} made a shot {}", gameMemo.getCurrentPlayer().getName(), shot);
 
         return new GameDto(game);
+    }
+
+    private void removeUnregisteredPlayers(Game game) {
+        game.getPlayers().removeIf(player -> player.getPlayerType().equals(PlayerType.GUEST));
     }
 }

@@ -1,14 +1,13 @@
 package com.example.dart.model.dto;
 
 import com.example.dart.model.Game;
-import com.example.dart.model.Player;
 import com.example.dart.model.enums.GameState;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 @ToString
 @Getter
@@ -22,7 +21,9 @@ public class GameDto {
     public GameDto(Game game) {
         setPlayerScoresMap(game);
 
-        this.currentPlayer = game.getCurrentPlayer().getName();
+        if (Objects.nonNull(game.getCurrentPlayer())) {
+            this.currentPlayer = game.getCurrentPlayer().getName();
+        }
 
         this.gameState = game.getGameState();
         this.winner = game.getWinner();

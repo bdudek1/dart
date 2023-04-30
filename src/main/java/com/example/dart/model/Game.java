@@ -27,6 +27,7 @@ public class Game {
     @Enumerated(EnumType.STRING)
     private GameState gameState;
 
+    @Cascade(CascadeType.REMOVE)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "players_to_games",
             joinColumns = @JoinColumn(name = "game_id", referencedColumnName="id"),
@@ -74,6 +75,7 @@ public class Game {
     public void performShot(Shot shot) {
         Integer currentScore = playerScoresMap.get(this.currentPlayer.getName());
         Integer shotScore = shot.getScore();
+        String currentPlayerName = this.currentPlayer.getName();
 
         if (shotScore > currentScore) {
             currentScore += shotsFiredInTurn.stream()
@@ -91,7 +93,7 @@ public class Game {
         }
 
         currentScore -= shotScore;
-        playerScoresMap.put(this.currentPlayer.getName(), currentScore);
+        playerScoresMap.put(currentPlayerName, currentScore);
         shotsFiredInTurn.add(shotScore);
 
         if (shotsFiredInTurn.size() > 2) {
@@ -105,11 +107,11 @@ public class Game {
     }
 
     private void finishGame() {
-        this.gameState = GameState.FINISHED;
-        this.winner = this.currentPlayer.getName();
+        setGameState(GameState.FINISHED);
+        setWinner(this.currentPlayer);
     }
 
-    private void setCurrentPlayer(Player player) {
+    public void setCurrentPlayer(Player player) {
         this.currentPlayer = player;
     }
 
@@ -133,5 +135,26 @@ public class Game {
 
     private Player getFirstPlayer() {
         return this.players.iterator().next();
+    }
+
+    public Game getShallowCopy() {
+        Game game = new Game();
+        game.setPlayers(new LinkedList<>(this.players));
+        game.setCurrentPlayer(this.currentPlayer);
+        game.setGameState(this.gameState);
+
+        return game;
+    }
+
+    private void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    private void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    private void setWinner(Player player) {
+        this.winner = player.getName();
     }
 }
