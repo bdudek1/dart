@@ -56,6 +56,7 @@ public class GameServiceImpl implements GameService {
 
     public GameDto addShotAndReturnGameDto(Long gameId, Shot shot) {
         Game game = findGameById(gameId);
+        Player currentPlayer = game.getCurrentPlayer();
 
         if (game.getGameState() != GameState.IN_PROGRESS) {
             logger.warn("Game {} is not in progress. Can't perform a shot.", gameId);
@@ -64,11 +65,10 @@ public class GameServiceImpl implements GameService {
 
         game.performShot(shot);
 
-        Game gameMemo = game.getShallowCopy();
+        Game gameMemo = game.getShallowCopyWithCurrentPlayer(currentPlayer);
 
         if (game.getGameState() == GameState.FINISHED) {
-            removeUnregisteredPlayers(game);
-            game.setCurrentPlayer(null);
+            finalizeGame(game);
         }
 
         gameRepository.updateGame(game);
@@ -82,5 +82,11 @@ public class GameServiceImpl implements GameService {
 
     private void removeUnregisteredPlayers(Game game) {
         game.getPlayers().removeIf(player -> player.getPlayerType().equals(PlayerType.GUEST));
+    }
+
+    private void finalizeGame(Game game) {
+        removeUnregisteredPlayers(game);
+        game.setCurrentPlayer(null);
+        game.clearShotsFiredInTurn();
     }
 }

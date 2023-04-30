@@ -2,13 +2,12 @@ package com.example.dart.model;
 
 import com.example.dart.model.enums.GameState;
 
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.ToString;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.*;
 import java.util.ArrayList;
@@ -29,6 +28,7 @@ public class Game {
 
     @Cascade(CascadeType.REMOVE)
     @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     @JoinTable(name = "players_to_games",
             joinColumns = @JoinColumn(name = "game_id", referencedColumnName="id"),
             inverseJoinColumns = @JoinColumn(name = "player_id", referencedColumnName="id"))
@@ -36,6 +36,7 @@ public class Game {
 
     @ManyToOne
     @JoinColumn(name = "current_player_id")
+    @Cascade(CascadeType.REMOVE)
     private Player currentPlayer;
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -45,11 +46,11 @@ public class Game {
     @Column(name = "score")
     private final Map<String, Integer> playerScoresMap;
 
-    @Cascade(value={CascadeType.ALL})
-    @OnDelete(action= OnDeleteAction.CASCADE)
+    @Cascade(CascadeType.REMOVE)
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "game_to_shots_fired_in_turn",
-            joinColumns = {@JoinColumn(name = "game_id", referencedColumnName = "id")})
+    @Fetch(FetchMode.SUBSELECT)
+    @CollectionTable(name = "game_to_shots_fired_in_turn")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @Column(name = "shots_fired_in_turn")
     @JoinColumn
     private Collection<Integer> shotsFiredInTurn;
@@ -73,16 +74,16 @@ public class Game {
     }
 
     public void performShot(Shot shot) {
-        Integer currentScore = playerScoresMap.get(this.currentPlayer.getName());
-        Integer shotScore = shot.getScore();
         String currentPlayerName = this.currentPlayer.getName();
+        Integer currentScore = playerScoresMap.get(currentPlayerName);
+        Integer shotScore = shot.getScore();
 
         if (shotScore > currentScore) {
             currentScore += shotsFiredInTurn.stream()
                                             .mapToInt(Integer::intValue)
                                             .sum();
 
-            playerScoresMap.put(this.currentPlayer.getName(), currentScore);
+            playerScoresMap.put(currentPlayerName, currentScore);
             nextTurn();
 
             return;
@@ -111,10 +112,6 @@ public class Game {
         setWinner(this.currentPlayer);
     }
 
-    public void setCurrentPlayer(Player player) {
-        this.currentPlayer = player;
-    }
-
     private Player getNextPlayer(Player player) {
         Iterator<Player> playerIterator = players.iterator();
 
@@ -133,17 +130,29 @@ public class Game {
         return getFirstPlayer();
     }
 
-    private Player getFirstPlayer() {
-        return this.players.iterator().next();
-    }
-
-    public Game getShallowCopy() {
+    public Game getShallowCopyWithCurrentPlayer(Player currentPlayer) {
         Game game = new Game();
         game.setPlayers(new LinkedList<>(this.players));
-        game.setCurrentPlayer(this.currentPlayer);
+        game.setCurrentPlayer(currentPlayer);
         game.setGameState(this.gameState);
 
+        if (game.getGameState() == GameState.FINISHED) {
+            game.setWinner(currentPlayer);
+        }
+
         return game;
+    }
+
+    public void setCurrentPlayer(Player player) {
+        this.currentPlayer = player;
+    }
+
+    public void clearShotsFiredInTurn() {
+        this.shotsFiredInTurn.clear();
+    }
+
+    private Player getFirstPlayer() {
+        return this.players.iterator().next();
     }
 
     private void setPlayers(List<Player> players) {
