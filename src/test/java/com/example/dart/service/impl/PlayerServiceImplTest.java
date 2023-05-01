@@ -21,40 +21,41 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import static utils.TestDataHolder.TEST_PLAYER_1;
+
 public class PlayerServiceImplTest {
 
     @Mock
     private PlayerRepository playerRepositoryMock;
     private PlayerService playerService;
-    private static final Player TEST_PLAYER = new Player("testPlayer");
 
     @Test
     public void createPlayerTest() {
         doNothing().when(playerRepositoryMock).savePlayer(any());
 
-        Player savedPlayer = playerService.createPlayer(TEST_PLAYER);
+        Player savedPlayer = playerService.createPlayer(TEST_PLAYER_1);
 
         verify(playerRepositoryMock, times(1)).savePlayer(any());
-        assertEquals(TEST_PLAYER, savedPlayer);
+        assertEquals(TEST_PLAYER_1, savedPlayer);
     }
 
     @Test
     public void createPlayerShouldThrowEntityAlreadyExistsExceptionTest() {
         doThrow(new DataIntegrityViolationException("testMessage")).when(playerRepositoryMock).savePlayer(any());
 
-        assertThrows(EntityAlreadyExistsException.class, () -> playerService.createPlayer(TEST_PLAYER));
+        assertThrows(EntityAlreadyExistsException.class, () -> playerService.createPlayer(TEST_PLAYER_1));
 
         verify(playerRepositoryMock, times(1)).savePlayer(any());
     }
 
     @Test
     public void findPlayerByIdTest() {
-        when(playerRepositoryMock.findPlayerById(anyInt())).thenReturn(Optional.of(TEST_PLAYER));
+        when(playerRepositoryMock.findPlayerById(anyInt())).thenReturn(Optional.of(TEST_PLAYER_1));
 
         Player foundPlayer = playerService.findPlayerById(1);
 
         verify(playerRepositoryMock, times(1)).findPlayerById(anyInt());
-        assertEquals(TEST_PLAYER, foundPlayer);
+        assertEquals(TEST_PLAYER_1, foundPlayer);
     }
 
     @Test
@@ -68,26 +69,26 @@ public class PlayerServiceImplTest {
 
     @Test
     public void findPlayerByNameTest() {
-        when(playerRepositoryMock.findPlayerByName(anyString())).thenReturn(Optional.of(TEST_PLAYER));
+        when(playerRepositoryMock.findPlayerByName(anyString())).thenReturn(Optional.of(TEST_PLAYER_1));
 
-        Player foundPlayer = playerService.findPlayerByName(TEST_PLAYER.getName());
+        Player foundPlayer = playerService.findPlayerByName(TEST_PLAYER_1.getName());
 
         verify(playerRepositoryMock, times(1)).findPlayerByName(anyString());
-        assertEquals(TEST_PLAYER, foundPlayer);
+        assertEquals(TEST_PLAYER_1, foundPlayer);
     }
 
     @Test
     public void findPlayerByNameShouldThrowEntityNotFoundExceptionTest() {
         when(playerRepositoryMock.findPlayerByName(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> playerService.findPlayerByName(TEST_PLAYER.getName()));
+        assertThrows(EntityNotFoundException.class, () -> playerService.findPlayerByName(TEST_PLAYER_1.getName()));
 
         verify(playerRepositoryMock, times(1)).findPlayerByName(anyString());
     }
 
     @Test
     public void findAllPlayersTest() {
-        Collection<Player> playersTestCollection = Collections.singletonList(TEST_PLAYER);
+        Collection<Player> playersTestCollection = Collections.singletonList(TEST_PLAYER_1);
 
         when(playerRepositoryMock.findAllPlayers()).thenReturn(playersTestCollection);
 
@@ -102,7 +103,7 @@ public class PlayerServiceImplTest {
     public void deletePlayerTest() {
         doNothing().when(playerRepositoryMock).deletePlayer(any(Player.class));
 
-        playerService.deletePlayer(TEST_PLAYER);
+        playerService.deletePlayer(TEST_PLAYER_1);
 
         verify(playerRepositoryMock, times(1)).deletePlayer(any(Player.class));
     }
