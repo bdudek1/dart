@@ -48,14 +48,14 @@ public class PlayerStatisticsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].playerName").value(TEST_REGISTERED_PLAYER_1.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].shotsFired").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].gamesPlayed").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].shotsFired").value(0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].gamesPlayed").value(0))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].playerName").value(TEST_REGISTERED_PLAYER_2.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].shotsFired").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].gamesPlayed").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].shotsFired").value(0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].gamesPlayed").value(0))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[2].playerName").value(TEST_REGISTERED_PLAYER_3.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[2].shotsFired").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[2].gamesPlayed").value(1));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].shotsFired").value(0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].gamesPlayed").value(0));
 
         verify(playerStatisticsServiceMock).getOrderedPlayerStatistics(PlayerStatisticsOrderType.BY_GAMES_PLAYED, 1);
     }

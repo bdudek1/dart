@@ -39,10 +39,6 @@ public class PlayerStatistics {
 
     public PlayerStatistics(RegisteredPlayer player) {
         this.player = player;
-
-        //we need those fields to be 1 at start to prevent dividing by 0 while querying db
-        incrementGamesPlayed();
-        incrementShotsFired();
     }
 
     public void incrementGamesPlayed() {

@@ -89,6 +89,7 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
 
         Root<PlayerStatistics> root = query.from(PlayerStatistics.class);
 
+        query.select(root).where(cb.gt(root.get("gamesPlayed"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("gamesWon"), root.get("gamesPlayed"))));
 
         List<PlayerStatistics> playerStatisticsOrderedByGamesWonPercentageDesc = session.createQuery(query)
@@ -110,6 +111,7 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
 
         Root<PlayerStatistics> root = query.from(PlayerStatistics.class);
 
+        query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("triple20Hits"), root.get("shotsFired"))));
 
         List<PlayerStatistics> playerStatisticsOrderedByTriple20HitsPercentageDesc = session.createQuery(query)
@@ -131,6 +133,7 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
 
         Root<PlayerStatistics> root = query.from(PlayerStatistics.class);
 
+        query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("double20Hits"), root.get("shotsFired"))));
 
         List<PlayerStatistics> playerStatisticsOrderedByDouble20HitsPercentageDesc = session.createQuery(query)
@@ -152,6 +155,7 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
 
         Root<PlayerStatistics> root = query.from(PlayerStatistics.class);
 
+        query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("single20Hits"), root.get("shotsFired"))));
 
         List<PlayerStatistics> playerStatisticsOrderedBySingle20HitsPercentageDesc = session.createQuery(query)
@@ -173,6 +177,7 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
 
         Root<PlayerStatistics> root = query.from(PlayerStatistics.class);
 
+        query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("single25Hits"), root.get("shotsFired"))));
 
         List<PlayerStatistics> playerStatisticsOrderedBySingle25HitsPercentageDesc = session.createQuery(query)
@@ -194,6 +199,7 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
 
         Root<PlayerStatistics> root = query.from(PlayerStatistics.class);
 
+        query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("double25Hits"), root.get("shotsFired"))));
 
         List<PlayerStatistics> playerStatisticsOrderedByDouble25HitsPercentageDesc = session.createQuery(query)
@@ -215,6 +221,7 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
 
         Root<PlayerStatistics> root = query.from(PlayerStatistics.class);
 
+        query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("doubleHits"), root.get("shotsFired"))));
 
         List<PlayerStatistics> playerStatisticsOrderedByDoubleHitsPercentageDesc = session.createQuery(query)
@@ -236,6 +243,7 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
 
         Root<PlayerStatistics> root = query.from(PlayerStatistics.class);
 
+        query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("tripleHits"), root.get("shotsFired"))));
 
         List<PlayerStatistics> playerStatisticsOrderedByTripleHitsPercentageDesc = session.createQuery(query)

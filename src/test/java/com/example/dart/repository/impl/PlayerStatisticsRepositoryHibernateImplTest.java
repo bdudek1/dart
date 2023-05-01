@@ -37,9 +37,9 @@ public class PlayerStatisticsRepositoryHibernateImplTest {
         List<PlayerStatistics> playerStatisticsList = playerStatisticsRepository.getPageOfPlayerStatisticsOrderByGamesPlayedDesc(1);
         PlayerStatistics playerStatistics = playerStatisticsList.get(0);
 
-        assertEquals(1, playerStatistics.getGamesPlayed());
+        assertEquals(0, playerStatistics.getGamesPlayed());
         assertEquals(0, playerStatistics.getGamesWon());
-        assertEquals(1, playerStatistics.getShotsFired());
+        assertEquals(0, playerStatistics.getShotsFired());
         assertEquals(0, playerStatistics.getTriple20Hits());
         assertEquals(0, playerStatistics.getDouble20Hits());
         assertEquals(0, playerStatistics.getSingle20Hits());
@@ -64,9 +64,9 @@ public class PlayerStatisticsRepositoryHibernateImplTest {
         playerStatisticsList = playerStatisticsRepository.getPageOfPlayerStatisticsOrderByGamesPlayedDesc(1);
         playerStatistics = playerStatisticsList.get(0);
 
-        assertEquals(2, playerStatistics.getGamesPlayed());
+        assertEquals(1, playerStatistics.getGamesPlayed());
         assertEquals(1, playerStatistics.getGamesWon());
-        assertEquals(2, playerStatistics.getShotsFired());
+        assertEquals(1, playerStatistics.getShotsFired());
         assertEquals(1, playerStatistics.getTriple20Hits());
         assertEquals(1, playerStatistics.getDouble20Hits());
         assertEquals(1, playerStatistics.getSingle20Hits());
@@ -76,18 +76,24 @@ public class PlayerStatisticsRepositoryHibernateImplTest {
         assertEquals(1, playerStatistics.getTripleHits());
     }
 
+    /*
+      The expected value of 1 in most cases below is because the Repository will not select
+      the playerStatistics in those queries if the gamesPlayed or shotsFired are equal to 0,
+      that is because while sorting results by percentages mentioned in method names the query will
+      force the DBMS to divide by zero
+     */
     @Test
     public void testGetPlayerStatisticsByAllOrders() {
         assertEquals(3, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByGamesPlayedDesc(1).size());
         assertEquals(3, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByShotsFiredDesc(1).size());
-        assertEquals(3, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByGamesWonPercentageDesc(1).size());
-        assertEquals(3, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByTriple20HitsPercentageDesc(1).size());
-        assertEquals(3, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByDouble20HitsPercentageDesc(1).size());
-        assertEquals(3, playerStatisticsRepository.getPageOfPlayerStatisticsOrderBySingle20HitsPercentageDesc(1).size());
-        assertEquals(3, playerStatisticsRepository.getPageOfPlayerStatisticsOrderBySingle25HitsPercentageDesc(1).size());
-        assertEquals(3, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByDouble25HitsPercentageDesc(1).size());
-        assertEquals(3, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByDoubleHitsPercentageDesc(1).size());
-        assertEquals(3, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByTripleHitsPercentageDesc(1).size());
+        assertEquals(1, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByGamesWonPercentageDesc(1).size());
+        assertEquals(1, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByTriple20HitsPercentageDesc(1).size());
+        assertEquals(1, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByDouble20HitsPercentageDesc(1).size());
+        assertEquals(1, playerStatisticsRepository.getPageOfPlayerStatisticsOrderBySingle20HitsPercentageDesc(1).size());
+        assertEquals(1, playerStatisticsRepository.getPageOfPlayerStatisticsOrderBySingle25HitsPercentageDesc(1).size());
+        assertEquals(1, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByDouble25HitsPercentageDesc(1).size());
+        assertEquals(1, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByDoubleHitsPercentageDesc(1).size());
+        assertEquals(1, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByTripleHitsPercentageDesc(1).size());
     }
 
     @Test
