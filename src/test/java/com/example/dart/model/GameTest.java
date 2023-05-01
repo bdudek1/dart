@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.example.dart.model.Game.MAX_SCORE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static utils.TestDataHolder.*;
@@ -54,7 +55,30 @@ public class GameTest {
 
         assertEquals(MAX_SCORE - TEST_SHOT.getScore() * 3, testGame.getPlayerScoresMap().get(TEST_PLAYER_3.getName()));
         assertEquals(TEST_PLAYER_1, testGame.getCurrentPlayer());
+    }
 
+    @Test
+    public void testCalculatePossibleEndingShots() {
+        Game testGame = new Game(TEST_PLAYERS);
+
+        assertEquals(0, testGame.getPossibleEndingShots().size());
+
+        performWholeTurn(testGame);
+        performWholeTurn(testGame);
+        performWholeTurn(testGame);
+        performWholeTurn(testGame);
+        performWholeTurn(testGame);
+        performWholeTurn(testGame);
+
+        assertEquals(29, testGame.getPossibleEndingShots().size());
+
+        testGame.performShot(TEST_SHOT);
+
+        assertEquals(10, testGame.getPossibleEndingShots().size());
+
+        testGame.performShot(TEST_SHOT);
+
+        assertEquals(1, testGame.getPossibleEndingShots().size());
     }
 
     @Test

@@ -160,7 +160,7 @@ public class Game {
 
         for (Shot possibleFirstShot: ValidShots.VALID_SHOTS) {
             for (Shot possibleSecondShot: ValidShots.VALID_SHOTS) {
-                for(Shot possibleThirdShot: ValidShots.VALID_SHOTS) {
+                for (Shot possibleThirdShot: ValidShots.VALID_SHOTS) {
                     Integer possibleScore = possibleFirstShot.getScore() +
                                             possibleSecondShot.getScore() +
                                             possibleThirdShot.getScore();
