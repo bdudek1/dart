@@ -27,6 +27,8 @@ public class PossibleEndingShots implements Comparable<PossibleEndingShots> {
 
     @Override
     public int compareTo(PossibleEndingShots possibleEndingShots) {
+        long thisShotsSize = this.shots.size();
+        long otherShotsSize = possibleEndingShots.shots.size();
         long thisSinglesAmount = this.shots.stream()
                         .filter(shot -> shot.getShotType() == ShotType.SINGLE)
                         .count();
@@ -40,6 +42,10 @@ public class PossibleEndingShots implements Comparable<PossibleEndingShots> {
         long otherTriplesAmount = possibleEndingShots.shots.stream()
                         .filter(shot -> shot.getShotType() == ShotType.TRIPLE)
                         .count();
+
+        if (thisShotsSize != otherShotsSize) {
+            return Long.compare(thisShotsSize, otherShotsSize);
+        }
 
         if (thisSinglesAmount != otherSinglesAmount) {
             return Long.compare(otherSinglesAmount, thisSinglesAmount);

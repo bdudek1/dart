@@ -149,7 +149,7 @@ public class Game {
         switch (shotsLeft) {
             case 3 -> calculateThreePossibleEndingShots(currentScore);
             case 2 -> calculateTwoPossibleEndingShots(currentScore);
-            case 1 -> calculateOnePossibleEndingShots(currentScore);
+            case 1 -> calculateOnePossibleEndingShot(currentScore);
         }
     }
 
@@ -173,6 +173,9 @@ public class Game {
                 }
             }
         }
+
+        calculateTwoPossibleEndingShots(currentScore);
+        calculateOnePossibleEndingShot(currentScore);
     }
 
     private void calculateTwoPossibleEndingShots(Integer currentScore) {
@@ -189,9 +192,11 @@ public class Game {
                 }
             }
         }
+
+        calculateOnePossibleEndingShot(currentScore);
     }
 
-    private void calculateOnePossibleEndingShots(Integer currentScore) {
+    private void calculateOnePossibleEndingShot(Integer currentScore) {
         if (currentScore > MAX_REACHABLE_SHOT_SCORE) {
             return;
         }
