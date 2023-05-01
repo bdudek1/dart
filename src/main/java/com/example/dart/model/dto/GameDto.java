@@ -1,6 +1,7 @@
 package com.example.dart.model.dto;
 
 import com.example.dart.model.Game;
+import com.example.dart.model.PossibleEndingShots;
 import com.example.dart.model.enums.GameState;
 
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.ToString;
 
 import java.util.LinkedHashMap;
 import java.util.Objects;
+import java.util.Set;
 
 @ToString
 @Getter
@@ -17,6 +19,7 @@ public class GameDto {
     private Long id;
     private String winner;
     private GameState gameState;
+    private Set<PossibleEndingShots> possibleEndingShots;
 
     public GameDto(Game game) {
         setPlayerScoresMap(game);
@@ -28,6 +31,7 @@ public class GameDto {
         this.gameState = game.getGameState();
         this.winner = game.getWinner();
         this.id = game.getId();
+        this.possibleEndingShots = game.getPossibleEndingShots();
     }
 
     public boolean isFinished() {

@@ -11,6 +11,7 @@ import org.hibernate.annotations.CascadeType;
 
 import java.util.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -19,6 +20,8 @@ import java.util.Map;
 @ToString
 @Getter
 public class Game {
+    public static final int MAX_NUMBER_OF_SHOTS_PER_TURN = 3;
+    public static final int MAX_REACHABLE_SHOT_SCORE = 60;
     public static final int MAX_SCORE = 501;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,11 +58,14 @@ public class Game {
     @JoinColumn
     private Collection<Integer> shotsFiredInTurn;
     private String winner;
+    @Transient
+    private final Set<PossibleEndingShots> possibleEndingShots;
 
     public Game() {
         this.gameState = GameState.IN_PROGRESS;
         this.playerScoresMap = new HashMap<>();
         this.shotsFiredInTurn = new ArrayList<>();
+        this.possibleEndingShots = new TreeSet<>();
     }
 
     public Game(Collection<Player> players) {
@@ -97,14 +103,17 @@ public class Game {
         playerScoresMap.put(currentPlayerName, currentScore);
         shotsFiredInTurn.add(shotScore);
 
-        if (shotsFiredInTurn.size() > 2) {
+        if (shotsFiredInTurn.size() >= MAX_NUMBER_OF_SHOTS_PER_TURN) {
             nextTurn();
+        } else {
+            calculatePossibleEndingShots();
         }
     }
 
     private void nextTurn() {
         this.shotsFiredInTurn.clear();
         setCurrentPlayer(getNextPlayer(this.currentPlayer));
+        calculatePossibleEndingShots();
     }
 
     private void finishGame() {
@@ -128,6 +137,70 @@ public class Game {
         }
 
         return getFirstPlayer();
+    }
+
+    private void calculatePossibleEndingShots() {
+        this.possibleEndingShots.clear();
+
+        String currentPlayerName = this.currentPlayer.getName();
+        Integer currentScore = playerScoresMap.get(currentPlayerName);
+        Integer shotsLeft = MAX_NUMBER_OF_SHOTS_PER_TURN - shotsFiredInTurn.size();
+
+        switch (shotsLeft) {
+            case 3 -> calculateThreePossibleEndingShots(currentScore);
+            case 2 -> calculateTwoPossibleEndingShots(currentScore);
+            case 1 -> calculateOnePossibleEndingShots(currentScore);
+        }
+    }
+
+    private void calculateThreePossibleEndingShots(Integer currentScore) {
+        if (currentScore > MAX_REACHABLE_SHOT_SCORE * 3) {
+            return;
+        }
+
+        for (Shot possibleFirstShot: ValidShots.VALID_SHOTS) {
+            for (Shot possibleSecondShot: ValidShots.VALID_SHOTS) {
+                for(Shot possibleThirdShot: ValidShots.VALID_SHOTS) {
+                    Integer possibleScore = possibleFirstShot.getScore() +
+                                            possibleSecondShot.getScore() +
+                                            possibleThirdShot.getScore();
+
+                    if (possibleScore.equals(currentScore)) {
+                        this.possibleEndingShots.add(new PossibleEndingShots(
+                                Arrays.asList(possibleFirstShot, possibleSecondShot, possibleThirdShot)
+                        ));
+                    }
+                }
+            }
+        }
+    }
+
+    private void calculateTwoPossibleEndingShots(Integer currentScore) {
+        if (currentScore > MAX_REACHABLE_SHOT_SCORE * 2) {
+            return;
+        }
+
+        for (Shot possibleFirstShot: ValidShots.VALID_SHOTS) {
+            for (Shot possibleSecondShot: ValidShots.VALID_SHOTS) {
+                Integer possibleScore = possibleFirstShot.getScore() + possibleSecondShot.getScore();
+
+                if (possibleScore.equals(currentScore)) {
+                    this.possibleEndingShots.add(new PossibleEndingShots(Arrays.asList(possibleFirstShot, possibleSecondShot)));
+                }
+            }
+        }
+    }
+
+    private void calculateOnePossibleEndingShots(Integer currentScore) {
+        if (currentScore > MAX_REACHABLE_SHOT_SCORE) {
+            return;
+        }
+
+        for (Shot possibleShot: ValidShots.VALID_SHOTS) {
+            if (currentScore.equals(possibleShot.getScore())) {
+                this.possibleEndingShots.add(new PossibleEndingShots(Arrays.asList(possibleShot)));
+            }
+        }
     }
 
     public Game getShallowCopyWithCurrentPlayer(Player currentPlayer) {
