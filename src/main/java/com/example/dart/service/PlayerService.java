@@ -5,9 +5,9 @@ import com.example.dart.model.Player;
 import java.util.Collection;
 
 public interface PlayerService {
+    void deletePlayer(Player player);
     Player createPlayer(Player player);
     Collection<Player> findAllPlayers();
     Player findPlayerById(int id);
     Player findPlayerByName(String name);
-    void deletePlayer(Player player);
 }

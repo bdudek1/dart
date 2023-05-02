@@ -23,6 +23,7 @@ import java.util.Collection;
 
 @Service
 public class GameServiceImpl implements GameService {
+
     private static final Logger logger = LoggerFactory.getLogger(GameServiceImpl.class);
     private final GameRepository gameRepository;
     private final PlayerStatisticsService playerStatisticsService;

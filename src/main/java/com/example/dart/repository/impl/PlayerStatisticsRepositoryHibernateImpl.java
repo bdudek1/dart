@@ -38,7 +38,6 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
         logger.info("Updated player statistics of player: {}", playerStatistics.getPlayer().getName());
     }
 
-    @Override
     public List<PlayerStatistics> getPageOfPlayerStatisticsOrderByGamesPlayedDesc(int page) {
         Session session = sessionFactory.getCurrentSession();
 
@@ -49,17 +48,13 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
 
         query.orderBy(cb.desc(root.get("gamesPlayed")));
 
-        List<PlayerStatistics> playerStatisticsOrderedByGamesPlayedDesc = session.createQuery(query)
-                                                                                    .setFirstResult((page - 1) * PAGE_SIZE)
-                                                                                    .setMaxResults(PAGE_SIZE)
-                                                                                    .getResultList();
+        List<PlayerStatistics> playerStatisticsOrderedByGamesPlayedDesc = getPlayerStatisticsPageFromQuery(session, query, page);
 
         logger.info("Returning {} player statistics objects", playerStatisticsOrderedByGamesPlayedDesc.size());
 
         return Collections.unmodifiableList(playerStatisticsOrderedByGamesPlayedDesc);
     }
 
-    @Override
     public List<PlayerStatistics> getPageOfPlayerStatisticsOrderByShotsFiredDesc(int page) {
         Session session = sessionFactory.getCurrentSession();
 
@@ -70,17 +65,13 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
 
         query.orderBy(cb.desc(root.get("shotsFired")));
 
-        List<PlayerStatistics> playerStatisticsOrderedByShotsFiredDesc = session.createQuery(query)
-                                                                                    .setFirstResult((page - 1) * PAGE_SIZE)
-                                                                                    .setMaxResults(PAGE_SIZE)
-                                                                                    .getResultList();
+        List<PlayerStatistics> playerStatisticsOrderedByShotsFiredDesc = getPlayerStatisticsPageFromQuery(session, query, page);
 
         logger.info("Returning {} player statistics objects ordered by shots fired", playerStatisticsOrderedByShotsFiredDesc.size());
 
         return Collections.unmodifiableList(playerStatisticsOrderedByShotsFiredDesc);
     }
 
-    @Override
     public List<PlayerStatistics> getPageOfPlayerStatisticsOrderByGamesWonPercentageDesc(int page) {
         Session session = sessionFactory.getCurrentSession();
 
@@ -92,17 +83,13 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
         query.select(root).where(cb.gt(root.get("gamesPlayed"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("gamesWon"), root.get("gamesPlayed"))));
 
-        List<PlayerStatistics> playerStatisticsOrderedByGamesWonPercentageDesc = session.createQuery(query)
-                                                                                        .setFirstResult((page - 1) * PAGE_SIZE)
-                                                                                        .setMaxResults(PAGE_SIZE)
-                                                                                        .getResultList();
+        List<PlayerStatistics> playerStatisticsOrderedByGamesWonPercentageDesc = getPlayerStatisticsPageFromQuery(session, query, page);
 
         logger.info("Returning {} player statistics objects ordered by games won percentage", playerStatisticsOrderedByGamesWonPercentageDesc.size());
 
         return Collections.unmodifiableList(playerStatisticsOrderedByGamesWonPercentageDesc);
     }
 
-    @Override
     public List<PlayerStatistics> getPageOfPlayerStatisticsOrderByTriple20HitsPercentageDesc(int page) {
         Session session = sessionFactory.getCurrentSession();
 
@@ -114,17 +101,13 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
         query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("triple20Hits"), root.get("shotsFired"))));
 
-        List<PlayerStatistics> playerStatisticsOrderedByTriple20HitsPercentageDesc = session.createQuery(query)
-                                                                                                .setFirstResult((page - 1) * PAGE_SIZE)
-                                                                                                .setMaxResults(PAGE_SIZE)
-                                                                                                .getResultList();
+        List<PlayerStatistics> playerStatisticsOrderedByTriple20HitsPercentageDesc = getPlayerStatisticsPageFromQuery(session, query, page);
 
         logger.info("Returning {} player statistics objects ordered by triple 20 hits percentage", playerStatisticsOrderedByTriple20HitsPercentageDesc.size());
 
         return Collections.unmodifiableList(playerStatisticsOrderedByTriple20HitsPercentageDesc);
     }
 
-    @Override
     public List<PlayerStatistics> getPageOfPlayerStatisticsOrderByDouble20HitsPercentageDesc(int page) {
         Session session = sessionFactory.getCurrentSession();
 
@@ -136,17 +119,13 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
         query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("double20Hits"), root.get("shotsFired"))));
 
-        List<PlayerStatistics> playerStatisticsOrderedByDouble20HitsPercentageDesc = session.createQuery(query)
-                                                                                                .setFirstResult((page - 1) * PAGE_SIZE)
-                                                                                                .setMaxResults(PAGE_SIZE)
-                                                                                                .getResultList();
+        List<PlayerStatistics> playerStatisticsOrderedByDouble20HitsPercentageDesc = getPlayerStatisticsPageFromQuery(session, query, page);
 
         logger.info("Returning {} player statistics objects ordered by double 20 hits percentage", playerStatisticsOrderedByDouble20HitsPercentageDesc.size());
 
         return Collections.unmodifiableList(playerStatisticsOrderedByDouble20HitsPercentageDesc);
     }
 
-    @Override
     public List<PlayerStatistics> getPageOfPlayerStatisticsOrderBySingle20HitsPercentageDesc(int page) {
         Session session = sessionFactory.getCurrentSession();
 
@@ -158,17 +137,13 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
         query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("single20Hits"), root.get("shotsFired"))));
 
-        List<PlayerStatistics> playerStatisticsOrderedBySingle20HitsPercentageDesc = session.createQuery(query)
-                                                                                                .setFirstResult((page - 1) * PAGE_SIZE)
-                                                                                                .setMaxResults(PAGE_SIZE)
-                                                                                                .getResultList();
+        List<PlayerStatistics> playerStatisticsOrderedBySingle20HitsPercentageDesc = getPlayerStatisticsPageFromQuery(session, query, page);
 
         logger.info("Returning {} player statistics objects ordered by single 20 hits percentage", playerStatisticsOrderedBySingle20HitsPercentageDesc.size());
 
         return Collections.unmodifiableList(playerStatisticsOrderedBySingle20HitsPercentageDesc);
     }
 
-    @Override
     public List<PlayerStatistics> getPageOfPlayerStatisticsOrderBySingle25HitsPercentageDesc(int page) {
         Session session = sessionFactory.getCurrentSession();
 
@@ -180,17 +155,13 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
         query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("single25Hits"), root.get("shotsFired"))));
 
-        List<PlayerStatistics> playerStatisticsOrderedBySingle25HitsPercentageDesc = session.createQuery(query)
-                                                                                                .setFirstResult((page - 1) * PAGE_SIZE)
-                                                                                                .setMaxResults(PAGE_SIZE)
-                                                                                                .getResultList();
+        List<PlayerStatistics> playerStatisticsOrderedBySingle25HitsPercentageDesc = getPlayerStatisticsPageFromQuery(session, query, page);
 
         logger.info("Returning {} player statistics objects ordered by single 25 hits percentage", playerStatisticsOrderedBySingle25HitsPercentageDesc.size());
 
         return Collections.unmodifiableList(playerStatisticsOrderedBySingle25HitsPercentageDesc);
     }
 
-    @Override
     public List<PlayerStatistics> getPageOfPlayerStatisticsOrderByDouble25HitsPercentageDesc(int page) {
         Session session = sessionFactory.getCurrentSession();
 
@@ -202,17 +173,13 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
         query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("double25Hits"), root.get("shotsFired"))));
 
-        List<PlayerStatistics> playerStatisticsOrderedByDouble25HitsPercentageDesc = session.createQuery(query)
-                                                                                                .setFirstResult((page - 1) * PAGE_SIZE)
-                                                                                                .setMaxResults(PAGE_SIZE)
-                                                                                                .getResultList();
+        List<PlayerStatistics> playerStatisticsOrderedByDouble25HitsPercentageDesc = getPlayerStatisticsPageFromQuery(session, query, page);
 
         logger.info("Returning {} player statistics objects ordered by double 25 hits percentage", playerStatisticsOrderedByDouble25HitsPercentageDesc.size());
 
         return Collections.unmodifiableList(playerStatisticsOrderedByDouble25HitsPercentageDesc);
     }
 
-    @Override
     public List<PlayerStatistics> getPageOfPlayerStatisticsOrderByDoubleHitsPercentageDesc(int page) {
         Session session = sessionFactory.getCurrentSession();
 
@@ -224,17 +191,13 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
         query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("doubleHits"), root.get("shotsFired"))));
 
-        List<PlayerStatistics> playerStatisticsOrderedByDoubleHitsPercentageDesc = session.createQuery(query)
-                                                                                            .setFirstResult((page - 1) * PAGE_SIZE)
-                                                                                            .setMaxResults(PAGE_SIZE)
-                                                                                            .getResultList();
+        List<PlayerStatistics> playerStatisticsOrderedByDoubleHitsPercentageDesc = getPlayerStatisticsPageFromQuery(session, query, page);
 
         logger.info("Returning {} player statistics objects ordered by double hits percentage", playerStatisticsOrderedByDoubleHitsPercentageDesc.size());
 
         return Collections.unmodifiableList(playerStatisticsOrderedByDoubleHitsPercentageDesc);
     }
 
-    @Override
     public List<PlayerStatistics> getPageOfPlayerStatisticsOrderByTripleHitsPercentageDesc(int page) {
         Session session = sessionFactory.getCurrentSession();
 
@@ -246,13 +209,20 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
         query.select(root).where(cb.gt(root.get("shotsFired"), 0));
         query.orderBy(cb.desc(cb.quot(root.get("tripleHits"), root.get("shotsFired"))));
 
-        List<PlayerStatistics> playerStatisticsOrderedByTripleHitsPercentageDesc = session.createQuery(query)
-                                                                                            .setFirstResult((page - 1) * PAGE_SIZE)
-                                                                                            .setMaxResults(PAGE_SIZE)
-                                                                                            .getResultList();
+        List<PlayerStatistics> playerStatisticsOrderedByTripleHitsPercentageDesc = getPlayerStatisticsPageFromQuery(session, query, page);
 
         logger.info("Returning {} player statistics objects ordered by triple hits percentage", playerStatisticsOrderedByTripleHitsPercentageDesc.size());
 
         return Collections.unmodifiableList(playerStatisticsOrderedByTripleHitsPercentageDesc);
+    }
+
+    private List<PlayerStatistics> getPlayerStatisticsPageFromQuery(Session session,
+                                                                    CriteriaQuery<PlayerStatistics> query,
+                                                                    int page) {
+
+        return session.createQuery(query)
+                .setFirstResult((page - 1) * PAGE_SIZE)
+                .setMaxResults(PAGE_SIZE)
+                .getResultList();
     }
 }

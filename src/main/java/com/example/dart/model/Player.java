@@ -23,7 +23,7 @@ public class Player {
     }
 
     public Player(PlayerDto playerDto) {
-        this.name = playerDto.getName();
+        this(playerDto.getName());
     }
 
     public Player() { this.name = null; }

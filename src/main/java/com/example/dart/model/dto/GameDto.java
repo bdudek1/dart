@@ -16,10 +16,10 @@ import java.util.Set;
 public class GameDto {
     private LinkedHashMap<PlayerDto, Integer> playerScoresMap;
     private String currentPlayer;
-    private Long id;
-    private String winner;
-    private GameState gameState;
-    private Set<PossibleEndingShots> possibleEndingShots;
+    private final Long id;
+    private final String winner;
+    private final GameState gameState;
+    private final Set<PossibleEndingShots> possibleEndingShots;
 
     public GameDto(Game game) {
         setPlayerScoresMap(game);

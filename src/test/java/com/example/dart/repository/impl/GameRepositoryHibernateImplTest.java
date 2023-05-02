@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.TestDataHolder.TEST_PLAYERS;
+import static utils.TestDataHolder.*;
 
 @PropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
@@ -105,7 +105,7 @@ public class GameRepositoryHibernateImplTest {
     }
 
     private Collection<Player> initializePlayers() {
-        Collection<Player> testPlayers = List.of(new Player("testPlayer1"), new Player("testPlayer2"));
+        Collection<Player> testPlayers = List.of(new Player(TEST_PLAYER_NAME_1), new Player(TEST_PLAYER_NAME_2));
         testPlayers.forEach(playerRepository::savePlayer);
 
         return testPlayers;

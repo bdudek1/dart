@@ -25,13 +25,6 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    @GetMapping("/players")
-    public ResponseEntity<Collection<PlayerDto>> getPlayers() {
-        Collection<Player> players = playerService.findAllPlayers();
-
-        return ResponseEntity.ok(new PlayerDto().playerCollectionToPlayerDtoCollection(players));
-    }
-
     @GetMapping("/player/{id}")
     public ResponseEntity<PlayerDto> getPlayerById(@PathVariable(name = "id") int id) {
         return ResponseEntity.ok(new PlayerDto(playerService.findPlayerById(id)));
@@ -40,6 +33,13 @@ public class PlayerController {
     @GetMapping("/player")
     public ResponseEntity<PlayerDto> getPlayerByName(@RequestParam(name = "name") String name) {
         return ResponseEntity.ok(new PlayerDto(playerService.findPlayerByName(name)));
+    }
+
+    @GetMapping("/players")
+    public ResponseEntity<Collection<PlayerDto>> getPlayers() {
+        Collection<Player> players = playerService.findAllPlayers();
+
+        return ResponseEntity.ok(new PlayerDto().playerCollectionToPlayerDtoCollection(players));
     }
 
     @PostMapping("/player")

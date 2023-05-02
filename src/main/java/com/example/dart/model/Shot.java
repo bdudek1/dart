@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class Shot implements Comparable<Shot> {
+
     private Integer score;
     private ShotType shotType;
 
@@ -36,7 +37,7 @@ public class Shot implements Comparable<Shot> {
                 builder.append("MISS");
                 return builder.toString();
             }
-        };
+        }
 
         builder.append(score);
 

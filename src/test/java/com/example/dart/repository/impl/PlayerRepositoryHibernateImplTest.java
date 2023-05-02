@@ -16,6 +16,8 @@ import java.util.Collection;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static utils.TestDataHolder.TEST_PLAYER_NAME_1;
+import static utils.TestDataHolder.TEST_PLAYER_NAME_2;
 
 @PropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
@@ -25,12 +27,9 @@ public class PlayerRepositoryHibernateImplTest {
     @Autowired
     private PlayerRepository playerRepository;
 
-    private static final String TEST_PLAYER_NAME = "testPlayer";
-    private static final String TEST_PLAYER_NAME_2 = "testPlayer2";
-
     @Test
     public void testSavePlayer() {
-        Player testPlayer = new Player(TEST_PLAYER_NAME);
+        Player testPlayer = new Player(TEST_PLAYER_NAME_1);
 
         playerRepository.savePlayer(testPlayer);
         Collection<Player> allPlayers = playerRepository.findAllPlayers();
@@ -42,20 +41,20 @@ public class PlayerRepositoryHibernateImplTest {
 
     @Test
     public void testGetPlayerByName() {
-        Player testPlayer = new Player(TEST_PLAYER_NAME);
+        Player testPlayer = new Player(TEST_PLAYER_NAME_1);
 
         playerRepository.savePlayer(testPlayer);
-        Optional<Player> player = playerRepository.findPlayerByName(TEST_PLAYER_NAME);
+        Optional<Player> player = playerRepository.findPlayerByName(TEST_PLAYER_NAME_1);
 
         assertTrue(player.isPresent());
-        assertEquals(TEST_PLAYER_NAME, player.get().getName());
+        assertEquals(TEST_PLAYER_NAME_1, player.get().getName());
 
         playerRepository.deletePlayer(testPlayer);
     }
 
     @Test
     public void testGetAllPlayers() {
-        Player testPlayer = new Player(TEST_PLAYER_NAME);
+        Player testPlayer = new Player(TEST_PLAYER_NAME_1);
         Player testPlayer2 = new Player(TEST_PLAYER_NAME_2);
 
         playerRepository.savePlayer(testPlayer);
@@ -70,7 +69,7 @@ public class PlayerRepositoryHibernateImplTest {
 
     @Test
     public void testDeletePlayer() {
-        Player testPlayer = new Player(TEST_PLAYER_NAME);
+        Player testPlayer = new Player(TEST_PLAYER_NAME_1);
 
         playerRepository.savePlayer(testPlayer);
         Collection<Player> allPlayers = playerRepository.findAllPlayers();

@@ -2,10 +2,12 @@ package com.example.dart.model;
 
 import com.example.dart.model.enums.GameState;
 
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.ToString;
+
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
+
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
 
@@ -23,18 +25,19 @@ public class Game {
     public static final int MAX_NUMBER_OF_SHOTS_PER_TURN = 3;
     public static final int MAX_REACHABLE_SHOT_SCORE = 60;
     public static final int MAX_SCORE = 501;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
     private GameState gameState;
 
-    @Cascade(CascadeType.REMOVE)
     @ManyToMany(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SUBSELECT)
     @JoinTable(name = "players_to_games",
             joinColumns = @JoinColumn(name = "game_id", referencedColumnName="id"),
             inverseJoinColumns = @JoinColumn(name = "player_id", referencedColumnName="id"))
+    @Cascade(CascadeType.REMOVE)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Player> players;
 
     @ManyToOne
@@ -49,13 +52,12 @@ public class Game {
     @Column(name = "score")
     private final Map<String, Integer> playerScoresMap;
 
-    @Cascade(CascadeType.REMOVE)
     @ElementCollection(fetch = FetchType.EAGER)
-    @Fetch(FetchMode.SUBSELECT)
     @CollectionTable(name = "game_to_shots_fired_in_turn")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @Column(name = "shots_fired_in_turn")
     @JoinColumn
+    @Fetch(FetchMode.SUBSELECT)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Collection<Integer> shotsFiredInTurn;
     private String winner;
     @Transient

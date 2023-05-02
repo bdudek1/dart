@@ -24,22 +24,23 @@ public class PlayerDto {
     private char[] password;
     private PlayerType playerType;
 
-    public PlayerDto(Player player) {
-        this.name = player.getName();
-        this.id = player.getId();
-        this.playerType = player.getPlayerType();
-    }
-
-    public PlayerDto(String name) {
-        this.name = name;
-    }
     public PlayerDto(String name, char[] password) {
         this.name = name;
         this.password = password;
     }
 
+    public PlayerDto(Player player) {
+        this(player.getName());
+        this.id = player.getId();
+        this.playerType = player.getPlayerType();
+    }
+
+    public PlayerDto(String name) {
+        this(name, null);
+    }
+
     public Player toPlayer() {
-        if(Objects.isNull(this.password)) {
+        if (Objects.isNull(this.password)) {
             return new Player(this.name);
         } else {
             return new RegisteredPlayer(this.name, this.password);

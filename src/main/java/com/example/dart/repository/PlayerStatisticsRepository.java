@@ -5,8 +5,8 @@ import com.example.dart.model.PlayerStatistics;
 import java.util.List;
 
 public interface PlayerStatisticsRepository {
-    public static final int PAGE_SIZE = 10;
-    public void updatePlayerStatistics(PlayerStatistics playerStatistics);
+    int PAGE_SIZE = 10;
+    void updatePlayerStatistics(PlayerStatistics playerStatistics);
     List<PlayerStatistics> getPageOfPlayerStatisticsOrderByGamesPlayedDesc(int page);
     List<PlayerStatistics> getPageOfPlayerStatisticsOrderByShotsFiredDesc(int page);
     List<PlayerStatistics> getPageOfPlayerStatisticsOrderByGamesWonPercentageDesc(int page);

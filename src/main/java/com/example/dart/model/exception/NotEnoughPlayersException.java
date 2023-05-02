@@ -9,7 +9,4 @@ public class NotEnoughPlayersException extends RuntimeException {
         super();
     }
 
-    public NotEnoughPlayersException(String message) {
-        super(message);
-    }
 }

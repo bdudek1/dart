@@ -9,8 +9,8 @@ import java.util.Optional;
 public interface PlayerRepository {
     void savePlayer (Player player) throws DataIntegrityViolationException;
     void updatePlayer (Player player);
+    void deletePlayer (Player player);
     Collection<Player> findAllPlayers();
     Optional<Player> findPlayerById (int id);
     Optional<Player> findPlayerByName (String name);
-    void deletePlayer (Player player);
 }

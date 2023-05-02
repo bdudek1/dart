@@ -57,7 +57,7 @@ public class GameControllerTest {
                 MockMvcRequestBuilders.post(CREATE_GAME_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(
-                                new PlayerDto().playerCollectionToPlayerDtoCollection(TEST_PLAYERS)
+                                 new PlayerDto().playerCollectionToPlayerDtoCollection(TEST_PLAYERS)
                         ))
                 )
                 .andExpect(status().isCreated())
@@ -76,7 +76,7 @@ public class GameControllerTest {
                         MockMvcRequestBuilders.post(CREATE_GAME_URL)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(new ObjectMapper().writeValueAsString(
-                                        new PlayerDto().playerCollectionToPlayerDtoCollection(List.of(TEST_PLAYER_1)))
+                                         new PlayerDto().playerCollectionToPlayerDtoCollection(List.of(TEST_PLAYER_1)))
                                 )
                 )
                 .andExpect(status().isBadRequest());

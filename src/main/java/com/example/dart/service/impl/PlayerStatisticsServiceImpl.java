@@ -32,7 +32,6 @@ public class PlayerStatisticsServiceImpl implements PlayerStatisticsService {
         this.playerService = playerService;
     }
 
-    @Override
     public void updatePlayerStatistics(Game game, Shot shot) {
         Player player = game.getCurrentPlayer();
         if (player instanceof RegisteredPlayer registeredPlayer) {
@@ -49,7 +48,6 @@ public class PlayerStatisticsServiceImpl implements PlayerStatisticsService {
         }
     }
 
-    @Override
     public List<PlayerStatisticsDto> getOrderedPlayerStatistics(PlayerStatisticsOrderType orderType, int page) {
         logger.info("Getting ordered player statistics, order type: {}, page: {}", orderType, page);
         List<PlayerStatistics> playerStatistics;

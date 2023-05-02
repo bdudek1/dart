@@ -1,6 +1,5 @@
 package com.example.dart.model;
 
-
 import com.example.dart.model.enums.GameState;
 import com.example.dart.model.enums.ShotType;
 import org.junit.jupiter.api.Test;

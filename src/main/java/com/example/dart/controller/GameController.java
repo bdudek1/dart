@@ -7,7 +7,9 @@ import com.example.dart.model.dto.PlayerDto;
 import com.example.dart.model.dto.ShotDto;
 import com.example.dart.service.GameService;
 import com.example.dart.service.PlayerService;
+
 import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import java.util.Collection;
 @Validated
 @RestController
 public class GameController {
+
     private GameService gameService;
     private PlayerService playerService;
 
@@ -42,20 +45,20 @@ public class GameController {
         return new ResponseEntity<>(new GameDto(createdGame), HttpStatus.CREATED);
     }
 
-    @GetMapping("/game/{id}")
-    public ResponseEntity<GameDto> getGameById(@PathVariable(name = "id") Long id) {
-        Game game = gameService.findGameById(id);
-
-        return ResponseEntity.ok(new GameDto(game));
-    }
-
     @GetMapping("/games")
     public ResponseEntity<Collection<GameDto>> getAllGamesByPlayerId(@RequestParam(name = "playerId") Long playerId) {
         Collection<Game> games = gameService.findGamesByPlayerId(playerId);
 
         return ResponseEntity.ok(new ArrayList<>(games.stream()
-                                                      .map(GameDto::new)
-                                                      .toList()));
+                .map(GameDto::new)
+                .toList()));
+    }
+
+    @GetMapping("/game/{id}")
+    public ResponseEntity<GameDto> getGameById(@PathVariable(name = "id") Long id) {
+        Game game = gameService.findGameById(id);
+
+        return ResponseEntity.ok(new GameDto(game));
     }
 
     @PostMapping("/game/{id}/shot")

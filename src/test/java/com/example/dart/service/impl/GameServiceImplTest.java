@@ -28,7 +28,7 @@ import static utils.TestDataHolder.TEST_PLAYERS;
 import static utils.TestDataHolder.TEST_PLAYER_1;
 
 public class GameServiceImplTest {
-    //TODO:: update the tests after implementing PlayerStatisticsService
+
     @Mock
     private GameRepository gameRepositoryMock;
     @Mock

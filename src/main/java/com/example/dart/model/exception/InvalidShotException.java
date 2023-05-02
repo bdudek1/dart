@@ -9,7 +9,4 @@ public class InvalidShotException extends RuntimeException {
         super();
     }
 
-    public InvalidShotException(String message) {
-        super(message);
-    }
 }

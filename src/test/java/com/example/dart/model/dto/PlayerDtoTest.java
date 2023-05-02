@@ -1,6 +1,5 @@
 package com.example.dart.model.dto;
 
-
 import com.example.dart.model.Player;
 import com.example.dart.model.RegisteredPlayer;
 import org.junit.jupiter.api.Test;
