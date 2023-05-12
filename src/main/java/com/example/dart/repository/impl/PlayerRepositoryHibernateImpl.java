@@ -1,6 +1,7 @@
 package com.example.dart.repository.impl;
 
 import com.example.dart.model.Player;
+import com.example.dart.model.RegisteredPlayer;
 import com.example.dart.repository.PlayerRepository;
 
 import org.hibernate.Session;
@@ -44,6 +45,15 @@ public class PlayerRepositoryHibernateImpl implements PlayerRepository {
         Session session = sessionFactory.getCurrentSession();
         session.remove(player);
         logger.info("Player {} successfully deleted.", player);
+    }
+
+    @Override
+    public boolean arePlayerCredentialsValid(String name, String password) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("from Player where name = :name and password = :password", RegisteredPlayer.class)
+                .setParameter("name", name)
+                .setParameter("password", password)
+                .uniqueResult() != null;
     }
 
     public Optional<Player> findPlayerById (int id) {

@@ -16,12 +16,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
-import static utils.TestDataHolder.TEST_PLAYER_1;
+import static utils.TestDataHolder.*;
 
 public class PlayerServiceImplTest {
 
@@ -106,6 +104,24 @@ public class PlayerServiceImplTest {
         playerService.deletePlayer(TEST_PLAYER_1);
 
         verify(playerRepositoryMock, times(1)).deletePlayer(any(Player.class));
+    }
+
+    @Test
+    public void testArePlayerCredentialsValid() {
+        when(playerRepositoryMock.arePlayerCredentialsValid(TEST_PLAYER_NAME_1, String.valueOf(TEST_PASSWORD))).thenReturn(true);
+
+        assertTrue(playerService.arePlayerCredentialsValid(TEST_PLAYER_NAME_1, String.valueOf(TEST_PASSWORD)));
+
+        verify(playerRepositoryMock, times(1)).arePlayerCredentialsValid(TEST_PLAYER_NAME_1, String.valueOf(TEST_PASSWORD));
+    }
+
+    @Test
+    public void testArePlayerCredentialsValidWithInvalidCredentials() {
+        when(playerRepositoryMock.arePlayerCredentialsValid(TEST_PLAYER_NAME_1, String.valueOf(TEST_PASSWORD))).thenReturn(false);
+
+        assertFalse(playerService.arePlayerCredentialsValid(TEST_PLAYER_NAME_1, String.valueOf(TEST_PASSWORD)));
+
+        verify(playerRepositoryMock, times(1)).arePlayerCredentialsValid(TEST_PLAYER_NAME_1, String.valueOf(TEST_PASSWORD));
     }
 
     @BeforeEach

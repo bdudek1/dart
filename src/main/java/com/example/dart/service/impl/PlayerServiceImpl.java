@@ -60,4 +60,9 @@ public class PlayerServiceImpl implements PlayerService {
     public void deletePlayer(Player player) {
         playerRepository.deletePlayer(player);
     }
+
+    @Override
+    public boolean arePlayerCredentialsValid(String name, String password) {
+        return playerRepository.arePlayerCredentialsValid(name, password);
+    }
 }

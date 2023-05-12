@@ -3,6 +3,7 @@ package com.example.dart.repository.impl;
 import com.example.dart.DartApplication;
 import com.example.dart.configuration.HibernateTestConfiguration;
 import com.example.dart.model.Player;
+import com.example.dart.model.RegisteredPlayer;
 import com.example.dart.repository.PlayerRepository;
 
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static utils.TestDataHolder.TEST_PLAYER_NAME_1;
-import static utils.TestDataHolder.TEST_PLAYER_NAME_2;
+import static utils.TestDataHolder.*;
 
 @PropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
@@ -80,5 +80,49 @@ public class PlayerRepositoryHibernateImplTest {
         Collection<Player> allPlayersAfterDelete = playerRepository.findAllPlayers();
 
         assertTrue(allPlayersAfterDelete.size() == 0);
+    }
+
+    @Test
+    public void testValidatePlayerCredentials() {
+        RegisteredPlayer testPlayer = new RegisteredPlayer(TEST_PLAYER_NAME_1, TEST_PASSWORD);
+
+        playerRepository.savePlayer(testPlayer);
+
+        assertTrue(playerRepository.arePlayerCredentialsValid(TEST_PLAYER_NAME_1, String.valueOf(TEST_PASSWORD)));
+
+        playerRepository.deletePlayer(testPlayer);
+    }
+
+    @Test
+    public void testValidatePlayerCredentialsInvalidPassword() {
+        RegisteredPlayer testPlayer = new RegisteredPlayer(TEST_PLAYER_NAME_1, TEST_PASSWORD);
+
+        playerRepository.savePlayer(testPlayer);
+
+        assertFalse(playerRepository.arePlayerCredentialsValid(TEST_PLAYER_NAME_1, "invalid"));
+
+        playerRepository.deletePlayer(testPlayer);
+    }
+
+    @Test
+    public void testValidatePlayerCredentialsInvalidName() {
+        RegisteredPlayer testPlayer = new RegisteredPlayer(TEST_PLAYER_NAME_1, TEST_PASSWORD);
+
+        playerRepository.savePlayer(testPlayer);
+
+        assertFalse(playerRepository.arePlayerCredentialsValid("invalid", String.valueOf(TEST_PASSWORD)));
+
+        playerRepository.deletePlayer(testPlayer);
+    }
+
+    @Test
+    public void testValidatePlayerCredentialsGuestPlayer() {
+        Player testPlayer = new Player(TEST_PLAYER_NAME_1);
+
+        playerRepository.savePlayer(testPlayer);
+
+        assertFalse(playerRepository.arePlayerCredentialsValid(TEST_PLAYER_NAME_1, String.valueOf(TEST_PASSWORD)));
+
+        playerRepository.deletePlayer(testPlayer);
     }
 }

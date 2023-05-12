@@ -5,6 +5,7 @@ import com.example.dart.model.exception.EntityAlreadyExistsException;
 import com.example.dart.model.exception.EntityNotFoundException;
 import com.example.dart.service.PlayerService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,7 @@ public class PlayerControllerTest {
     private PlayerController playerController;
     private static final String PLAYERS_URL = "/players";
     private static final String PLAYER_URL = "/player";
+    private static final String VALIDATE_PLAYER_CREDENTIALS_URL = "/player/validate-credentials";
     private static final String PLAYER_URL_WITH_ID = "/player/{id}";
     private static final String INCORRECT_JSON_NAME_PROPERTY = "namee";
     private static final int TEST_PLAYER_ID = 1;
@@ -140,6 +142,18 @@ public class PlayerControllerTest {
                                 .content(new ObjectMapper().writeValueAsString(TEST_PLAYER_1).replace("name", INCORRECT_JSON_NAME_PROPERTY))
                 )
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testArePlayerCredentialsValid() throws Exception {
+        when(playerServiceMock.arePlayerCredentialsValid(TEST_PLAYER_NAME_1, String.valueOf(TEST_PASSWORD))).thenReturn(true);
+
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get(VALIDATE_PLAYER_CREDENTIALS_URL)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(new ObjectMapper().writeValueAsString(TEST_REGISTERED_PLAYER_1))
+                )
+                .andExpect(status().isOk());
     }
 
     @BeforeEach

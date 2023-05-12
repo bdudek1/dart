@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.Objects;
 
 @Validated
 @RestController
@@ -47,5 +48,14 @@ public class PlayerController {
         Player player = playerService.createPlayer(playerDto.toPlayer());
 
         return new ResponseEntity<>(new PlayerDto(player), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/player/validate-credentials")
+    public boolean arePlayerCredentialsValid(@Valid @RequestBody PlayerDto playerDto) {
+        if (Objects.isNull(playerDto.getPassword())) {
+            return false;
+        }
+
+        return playerService.arePlayerCredentialsValid(playerDto.getName(), String.valueOf(playerDto.getPassword()));
     }
 }
