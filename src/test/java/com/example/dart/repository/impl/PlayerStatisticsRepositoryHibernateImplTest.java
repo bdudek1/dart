@@ -16,8 +16,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static utils.TestDataHolder.*;
 
 @PropertySource("classpath:application-test.properties")
@@ -100,6 +101,18 @@ public class PlayerStatisticsRepositoryHibernateImplTest {
     public void testGetPlayerStatisticsUnexistentPage() {
         assertEquals(3, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByGamesPlayedDesc(1).size());
         assertEquals(0, playerStatisticsRepository.getPageOfPlayerStatisticsOrderByGamesPlayedDesc(2).size());
+    }
+
+    @Test
+    public void testGetPlayerStatisticsByPlayerName() {
+        assertNotNull(playerStatisticsRepository.getPlayerStatisticsByPlayerName(TEST_REGISTERED_PLAYER_1.getName()));
+        assertNotNull(playerStatisticsRepository.getPlayerStatisticsByPlayerName(TEST_REGISTERED_PLAYER_2.getName()));
+        assertNotNull(playerStatisticsRepository.getPlayerStatisticsByPlayerName(TEST_REGISTERED_PLAYER_3.getName()));
+    }
+
+    @Test
+    public void testGetPlayerStatisticsByPlayerNameUnexistent() {
+        assertEquals(Optional.empty(), playerStatisticsRepository.getPlayerStatisticsByPlayerName("unexistent"));
     }
 
     @BeforeEach

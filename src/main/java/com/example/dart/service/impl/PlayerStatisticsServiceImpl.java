@@ -5,6 +5,7 @@ import com.example.dart.model.dto.PlayerStatisticsDto;
 import com.example.dart.model.enums.GameState;
 import com.example.dart.model.enums.PlayerStatisticsOrderType;
 import com.example.dart.model.enums.PlayerType;
+import com.example.dart.model.exception.EntityNotFoundException;
 import com.example.dart.repository.PlayerStatisticsRepository;
 import com.example.dart.service.PlayerService;
 import com.example.dart.service.PlayerStatisticsService;
@@ -46,6 +47,16 @@ public class PlayerStatisticsServiceImpl implements PlayerStatisticsService {
             addGamesPlayedToPlayerStatistics(game);
             deleteNonRegisteredUsersFromDb(game);
         }
+    }
+
+    @Override
+    public PlayerStatisticsDto getPlayerStatisticsByPlayerName(String playerName) {
+
+        return new PlayerStatisticsDto(
+                playerStatisticsRepository
+                        .getPlayerStatisticsByPlayerName(playerName)
+                        .orElseThrow(EntityNotFoundException::new)
+        );
     }
 
     public List<PlayerStatisticsDto> getOrderedPlayerStatistics(PlayerStatisticsOrderType orderType, int page) {

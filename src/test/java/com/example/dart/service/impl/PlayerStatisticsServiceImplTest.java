@@ -4,9 +4,11 @@ import com.example.dart.model.Game;
 import com.example.dart.model.PlayerStatistics;
 import com.example.dart.model.RegisteredPlayer;
 import com.example.dart.model.Shot;
+import com.example.dart.model.dto.PlayerStatisticsDto;
 import com.example.dart.model.enums.GameState;
 import com.example.dart.model.enums.PlayerStatisticsOrderType;
 import com.example.dart.model.enums.ShotType;
+import com.example.dart.model.exception.EntityNotFoundException;
 import com.example.dart.repository.PlayerStatisticsRepository;
 import com.example.dart.service.PlayerService;
 import com.example.dart.service.PlayerStatisticsService;
@@ -18,9 +20,13 @@ import org.mockito.Mock;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static utils.TestDataHolder.TEST_REGISTERED_PLAYER_1;
 
 public class PlayerStatisticsServiceImplTest {
 
@@ -96,6 +102,26 @@ public class PlayerStatisticsServiceImplTest {
 
         playerStatisticsService.getOrderedPlayerStatistics(PlayerStatisticsOrderType.BY_DOUBLE_HITS_PERCENTAGE, TEST_PAGE);
         verify(playerStatisticsRepositoryMock, times(1)).getPageOfPlayerStatisticsOrderByDoubleHitsPercentageDesc(TEST_PAGE);
+    }
+
+    @Test
+    public void testGetPlayerStatisticsByPlayerName() {
+        when(playerStatisticsRepositoryMock.getPlayerStatisticsByPlayerName(any(String.class))).thenReturn(Optional.of(new PlayerStatistics(TEST_REGISTERED_PLAYER_1)));
+
+        PlayerStatisticsDto playerStatisticsDto = playerStatisticsService.getPlayerStatisticsByPlayerName(TEST_REGISTERED_PLAYER_1.getName());
+
+        verify(playerStatisticsRepositoryMock, times(1)).getPlayerStatisticsByPlayerName(TEST_REGISTERED_PLAYER_1.getName());
+
+        assertEquals(playerStatisticsDto.getPlayerName(), TEST_REGISTERED_PLAYER_1.getName());
+    }
+
+    @Test
+    public void testGetPlayerStatisticsByPlayerNameWithUnexistentName() {
+        when(playerStatisticsRepositoryMock.getPlayerStatisticsByPlayerName(any(String.class))).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> playerStatisticsService.getPlayerStatisticsByPlayerName(TEST_REGISTERED_PLAYER_1.getName()));
+
+        verify(playerStatisticsRepositoryMock, times(1)).getPlayerStatisticsByPlayerName(TEST_REGISTERED_PLAYER_1.getName());
     }
 
     @BeforeEach

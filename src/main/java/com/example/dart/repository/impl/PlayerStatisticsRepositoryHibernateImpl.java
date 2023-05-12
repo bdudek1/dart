@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -36,6 +37,19 @@ public class PlayerStatisticsRepositoryHibernateImpl implements PlayerStatistics
         session.merge(playerStatistics);
 
         logger.info("Updated player statistics of player: {}", playerStatistics.getPlayer().getName());
+    }
+
+    public Optional<PlayerStatistics> getPlayerStatisticsByPlayerName(String playerName) {
+        Session session = sessionFactory.getCurrentSession();
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<PlayerStatistics> query = cb.createQuery(PlayerStatistics.class);
+
+        Root<PlayerStatistics> root = query.from(PlayerStatistics.class);
+
+        query.select(root).where(cb.equal(root.get("player").get("name"), playerName));
+
+        return Optional.ofNullable(session.createQuery(query).getSingleResultOrNull());
     }
 
     public List<PlayerStatistics> getPageOfPlayerStatisticsOrderByGamesPlayedDesc(int page) {

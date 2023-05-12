@@ -1,7 +1,9 @@
 package com.example.dart.controller;
 
+import com.example.dart.model.PlayerStatistics;
 import com.example.dart.model.dto.PlayerStatisticsDto;
 import com.example.dart.model.enums.PlayerStatisticsOrderType;
+import com.example.dart.model.exception.EntityNotFoundException;
 import com.example.dart.service.PlayerStatisticsService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -34,6 +37,7 @@ public class PlayerStatisticsControllerTest {
     private PlayerStatisticsController playerStatisticsController;
 
     private static final String GET_PLAYER_STATISTICS_URL = "/player-statistics";
+    private static final String GET_PLAYER_STATISTICS_URL_WITH_PLAYER_NAME = "/player-statistics/{playerName}";
     private static final String INVALID_JSON_VALUE = "invalid_json";
 
     @Test
@@ -166,6 +170,31 @@ public class PlayerStatisticsControllerTest {
                 .andExpect(status().isBadRequest());
 
         verify(playerStatisticsServiceMock, never()).getOrderedPlayerStatistics(any(PlayerStatisticsOrderType.class), any(Integer.class));
+    }
+
+    @Test
+    public void testGetPlayerStatisticsByPlayerName() throws Exception {
+        when(playerStatisticsServiceMock.getPlayerStatisticsByPlayerName(TEST_REGISTERED_PLAYER_1.getName()))
+                .thenReturn(new PlayerStatisticsDto(new PlayerStatistics(TEST_REGISTERED_PLAYER_1)));
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_PLAYER_STATISTICS_URL_WITH_PLAYER_NAME, TEST_REGISTERED_PLAYER_1.getName()))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.playerName").value(TEST_REGISTERED_PLAYER_1.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.shotsFired").value(0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.gamesPlayed").value(0));
+
+        verify(playerStatisticsServiceMock).getPlayerStatisticsByPlayerName(TEST_REGISTERED_PLAYER_1.getName());
+    }
+
+    @Test
+    public void testGetPlayerStatisticsByPlayerNameNotFound() throws Exception {
+        when(playerStatisticsServiceMock.getPlayerStatisticsByPlayerName(TEST_REGISTERED_PLAYER_1.getName()))
+                .thenThrow(EntityNotFoundException.class);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get(GET_PLAYER_STATISTICS_URL_WITH_PLAYER_NAME, TEST_REGISTERED_PLAYER_1.getName()))
+                .andExpect(status().isNotFound());
+
+        verify(playerStatisticsServiceMock).getPlayerStatisticsByPlayerName(TEST_REGISTERED_PLAYER_1.getName());
     }
 
     @BeforeEach

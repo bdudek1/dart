@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface PlayerStatisticsService {
     void updatePlayerStatistics(Game game, Shot shot);
+    PlayerStatisticsDto getPlayerStatisticsByPlayerName(String playerName);
     List<PlayerStatisticsDto> getOrderedPlayerStatistics(PlayerStatisticsOrderType orderType, int page);
 }

@@ -5,7 +5,9 @@ import com.example.dart.model.enums.PlayerStatisticsOrderType;
 import com.example.dart.service.PlayerStatisticsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,5 +27,10 @@ public class PlayerStatisticsController {
     public List<PlayerStatisticsDto> getPlayerStatistics(@RequestParam(name = "orderType") PlayerStatisticsOrderType orderType,
                                                          @RequestParam(name = "page") int page) {
         return playerStatisticsService.getOrderedPlayerStatistics(orderType, page);
+    }
+
+    @GetMapping("/player-statistics/{playerName}")
+    public ResponseEntity<PlayerStatisticsDto> getPlayerStatisticsByPlayerName(@PathVariable(name = "playerName") String playerName) {
+        return ResponseEntity.ok(playerStatisticsService.getPlayerStatisticsByPlayerName(playerName));
     }
 }
