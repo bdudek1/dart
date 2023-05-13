@@ -51,11 +51,12 @@ public class PlayerController {
     }
 
     @GetMapping("/player/validate-credentials")
-    public boolean arePlayerCredentialsValid(@Valid @RequestBody PlayerDto playerDto) {
-        if (Objects.isNull(playerDto.getPassword())) {
+    public boolean arePlayerCredentialsValid(@RequestParam(name = "name") String name,
+                                             @RequestParam(name = "password") String password) {
+        if (Objects.isNull(name) || Objects.isNull(password)) {
             return false;
         }
 
-        return playerService.arePlayerCredentialsValid(playerDto.getName(), String.valueOf(playerDto.getPassword()));
+        return playerService.arePlayerCredentialsValid(name, password);
     }
 }

@@ -151,7 +151,8 @@ public class PlayerControllerTest {
         this.mockMvc.perform(
                         MockMvcRequestBuilders.get(VALIDATE_PLAYER_CREDENTIALS_URL)
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(new ObjectMapper().writeValueAsString(TEST_REGISTERED_PLAYER_1))
+                                .param("name", TEST_PLAYER_1.getName())
+                                .param("password", String.valueOf(TEST_PASSWORD))
                 )
                 .andExpect(status().isOk());
     }
